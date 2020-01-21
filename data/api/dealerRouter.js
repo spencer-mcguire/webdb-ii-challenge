@@ -28,8 +28,20 @@ router.post("/", (req, res) => {
   const carData = req.body;
   db("cars")
     .insert(carData)
-    .then(car => {
-      res.status(201).json(car);
+    .then(carId => {
+      const id = carId[0];
+      console.log(id);
+      db("cars")
+        .where({ id })
+        .then(car => {
+          if (car) {
+            res.status(201).json(car[0]);
+          } else {
+            res.status(500).json({
+              error_message: "Something happened displaying added car"
+            });
+          }
+        });
     })
     .catch(err => {
       res
