@@ -8,6 +8,9 @@
   },
   "author": "Lambda School",
   "devDependencies": {
-    "nodemon": "^1.19.4"
+    "nodemon": "^2.0.2"
+  },
+  "dependencies": {
+    "knex": "^0.20.8"
   }
 }
