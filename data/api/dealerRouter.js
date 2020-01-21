@@ -22,6 +22,23 @@ router.get("/", (req, res) => {
 });
 
 // GET specific car
+router.get("/:id", (req, res) => {
+  const { id } = req.params;
+  db("cars")
+    .where({ id })
+    .then(car => {
+      if (car.length) {
+        res.json(car[0]);
+      } else {
+        res.status(404).json({ error_message: `Unable to find car ${id}` });
+      }
+    })
+    .catch(err => {
+      res
+        .status(500)
+        .json({ error_message: `Something happened when finding car ${id}` });
+    });
+});
 
 // POST add a new car
 router.post("/", (req, res) => {
@@ -41,6 +58,9 @@ router.post("/", (req, res) => {
               error_message: "Something happened displaying added car"
             });
           }
+        })
+        .catch(err => {
+          res.status(500).json({ error_message: "OOPS something happened" });
         });
     })
     .catch(err => {
