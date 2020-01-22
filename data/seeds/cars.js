@@ -4,6 +4,7 @@ exports.seed = function(knex, Promise) {
     .then(function() {
       return knex("cars").insert([
         {
+          id: 1,
           make: "Ford",
           model: "f-150",
           vin: "2G1WB5EK0A1221785",
@@ -12,6 +13,7 @@ exports.seed = function(knex, Promise) {
           status_of_title: ""
         },
         {
+          id: 2,
           make: "KIA",
           model: "Forte",
           vin: "4A3AE35G41E007631",
@@ -20,6 +22,7 @@ exports.seed = function(knex, Promise) {
           status_of_title: "clean"
         },
         {
+          id: 3,
           make: "Chevy",
           model: "Sonic",
           vin: "KNALD124045017362",
@@ -28,6 +31,7 @@ exports.seed = function(knex, Promise) {
           status_of_title: ""
         },
         {
+          id: 4,
           make: "Dodge",
           model: "Ram 1500",
           vin: "JN8AS58V19W431666",

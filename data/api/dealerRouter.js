@@ -94,8 +94,9 @@ router.put("/:id", (req, res) => {
 // DELETE remove a car
 router.delete("/:id", (req, res) => {
   const id = req.params;
+  console.log(id);
   db("cars")
-    .where({ id })
+    .where(id)
     .del()
     .then(count => {
       if (count) {
