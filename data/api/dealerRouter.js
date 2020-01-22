@@ -41,37 +41,43 @@ router.get("/:id", (req, res) => {
 });
 
 // POST add a new car
-router.post("/", (req, res) => {
-  const carData = req.body;
-  db("cars")
-    .insert(carData)
-    .then(carId => {
-      const id = carId[0];
-      console.log(id);
-      db("cars")
-        .where({ id })
-        .then(car => {
-          if (car) {
-            res.status(201).json(car[0]);
-          } else {
-            res.status(500).json({
-              error_message: "Something happened displaying added car"
-            });
-          }
-        })
-        .catch(err => {
-          res.status(500).json({ error_message: "OOPS something happened" });
-        });
-    })
-    .catch(err => {
-      res
-        .status(500)
-        .json({ error_message: "Something happened when adding a car" });
-    });
-});
+router.post(
+  "/",
+  validateData("make"),
+  validateData("model"),
+  validateData("vin"),
+  validateData("mileage"),
+  (req, res) => {
+    const carData = req.body;
+    db("cars")
+      .insert(carData)
+      .then(carId => {
+        const id = carId[0];
+        db("cars")
+          .where({ id })
+          .then(car => {
+            if (car) {
+              res.status(201).json(car[0]);
+            } else {
+              res.status(500).json({
+                error_message: "Something happened displaying added car"
+              });
+            }
+          })
+          .catch(err => {
+            res.status(500).json({ error_message: "OOPS something happened" });
+          });
+      })
+      .catch(err => {
+        res
+          .status(500)
+          .json({ error_message: "Something happened when adding a car" });
+      });
+  }
+);
 
 // PUT update a car
-router.put("/:id", (req, res) => {
+router.put("/:id", validateData, (req, res) => {
   const changes = req.body;
   const { id } = req.params;
   db("cars")
@@ -111,5 +117,17 @@ router.delete("/:id", (req, res) => {
         .json({ error_message: "Something happened when adding a car" });
     });
 });
+
+function validateData(prop) {
+  return function(req, res, next) {
+    if (Object.entries(req.body).length === 0) {
+      res.status(400).json({ message: "Missing action data." });
+    } else if (!req.body[prop]) {
+      res.status(400).json({ message: `Missing required ${prop} field.` });
+    } else {
+      next();
+    }
+  };
+}
 
 module.exports = router;
