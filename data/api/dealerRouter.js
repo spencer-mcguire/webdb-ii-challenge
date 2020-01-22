@@ -22,7 +22,7 @@ router.get("/", (req, res) => {
 });
 
 // GET specific car
-router.get("/:id", (req, res) => {
+router.get("/:id", validateId, (req, res) => {
   const { id } = req.params;
   db("cars")
     .where({ id })
@@ -128,6 +128,25 @@ function validateData(prop) {
       next();
     }
   };
+}
+
+function validateId(req, res, next) {
+  const { id } = req.params;
+  db("cars")
+    .where("id", id)
+    .then(car => {
+      if (car.length) {
+        next();
+      } else {
+        res.status(400).json({ error_message: "Invalid inventory ID." });
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({
+        error_message: "Something happened when validating the inventory ID."
+      });
+    });
 }
 
 module.exports = router;
